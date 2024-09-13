@@ -1,0 +1,234 @@
+##Nesse projeto da AV1 vamos fazer uma Regressão Linear sobre Pokémon e alguns graficos.
+
+pip install jupyterthemes #Colocar imagens
+
+import matplotlib.pyplot as plt
+from jupyterthemes import jtplot
+jtplot.style()
+plt.rcParams['axes.grid'] = False
+
+poquimão = plt.imread("poquimão.jpg")
+print(poquimão.shape)
+plt.imshow(poquimão, cmap='gray')
+plt.title('Status dos Pokemons')
+plt.show()
+
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+from google.colab import files
+
+import seaborn as sns
+from jupyterthemes import jtplot
+jtplot.style()
+%matplotlib inline
+
+uploaded = files.upload()
+filename = next(iter(uploaded))
+df = pd.read_csv(filename)
+
+X = df[['HP', 'Attack', 'Defense', 'Sp_Atk', 'Sp_Def', 'Speed']]
+y = df['Total']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+poly = PolynomialFeatures(degree=2)
+X_train_poly = poly.fit_transform(X_train)
+X_test_poly = poly.transform(X_test)
+
+
+scaler = StandardScaler()
+X_train_poly_scaled = scaler.fit_transform(X_train_poly)
+X_test_poly_scaled = scaler.transform(X_test_poly)
+
+model = LinearRegression()
+model.fit(X_train_poly_scaled, y_train)
+
+predictions = model.predict(X_test_poly_scaled)
+
+#Analise dos dados
+mse = mean_squared_error(y_test, predictions)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, predictions)
+
+print("MSE (Mean Squared Error):", mse)
+print("RMSE (Root Mean Squared Error):", rmse)
+print("R² (R-squared):", r2)
+
+poquimão = plt.imread("poquimão.jpg")
+
+df.describe() #Descreve todas as imformações de um modo geral, e também
+
+df.head()
+
+df.tail()
+
+df['Number'].min() #Retorna o valor minimo armazenado na coluna
+
+df['Number'].max() #Retorna o valor maximo armazenado na coluna
+
+import numpy as np
+from sklearn.linear_model import LinearRegression
+#Regresão linear do ataque e defesa do Bulbasaur e Charmander e suas evoluções
+Attack = np.array([[49], [62], [82], [52], [64], [84]])
+Defense = np.array([49, 63, 83, 43, 58, 78])
+
+modelo = LinearRegression()
+modelo.fit(Attack, Defense)
+
+Ataque_Pokemon = [[50]]
+previsão = modelo.predict(Ataque_Pokemon)
+print("Defense ", Ataque_Pokemon[0][0],
+      "Attack:", previsão[0], "DPS")
+
+pokemon = pd.read_csv("pokemon_alopez247.csv", index_col=0)
+
+## Análise Exploratória de Dados
+
+**Def:** Procedimentos para analisar dados, técnicas para interpretar os resultados de tais procedimentos, formas de planejar a coleta de dados para tornar sua análise mais fácil, ou mais precisa, e todo o mecanismo e resultados das estatísticas aplicáveis à análise de dados (Tukey, 1977)
+
+### 1-D - Histograma e Densidade
+
+pokemon = pd.read_csv("pokemon_alopez247.csv", index_col=0)
+
+### 2-D - Dispersão de Ataque e Defesa
+
+pokemon[['HP', 'Attack']].corr()
+
+sns.pairplot(pokemon.loc[:,'HP':'Attack'])
+plt.show()
+
+### Múltiplos plots com `plt.subplots()`
+
+[Documentação](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot)
+
+`fig, axes = plt.subplot(M, N)`
+
+* M são linhas
+* N são colunas
+
+fig, axes = plt.subplots(1, 3, sharey='row')
+x = np.linspace(0, 2, 100) # entre 0 e 2 com 100 quebras iguais
+
+axes[0].plot(x, x, 'r') # Linha Linear Red
+axes[0].set_title('Grass')
+axes[0].set_xlabel('eixo x')
+axes[0].set_ylabel('eixo y') # somente setando no primeiro axes
+
+axes[1].plot(x, x**2, 'g') # Linha Quadrática Green
+axes[1].set_title('Fire')
+axes[1].set_xlabel('eixo x')
+
+axes[2].plot(x, x**3, 'b') # Linha Cúbica Blue
+axes[2].set_title('Water')
+axes[2].set_xlabel('eixo x')
+
+fig.suptitle('Tipos iniciais mais fortes!', fontsize=16)
+
+plt.tight_layout() # Ajusta o padding dos subplots
+
+plt.show()
+
+fig, axes = plt.subplots(3, 1, sharex='col')
+x = np.linspace(0, 2, 100) # entre 0 e 2 com 100 quebras iguais
+
+axes[0].plot(x, x, 'r') # Linha Linear Red
+axes[0].set_title('Fire')
+axes[0].set_ylabel('eixo y')
+axes[0].set_ylim( (0, 8) )
+
+axes[1].plot(x, x**2, 'g') # Linha Quadrática Green
+axes[1].set_title('Grass')
+axes[1].set_ylabel('eixo y')
+axes[1].set_ylim( (0, 8) )
+
+axes[2].plot(x, x**3, 'b') # Linha Cúbica Blue
+axes[2].set_title('Water')
+axes[2].set_ylabel('eixo y')
+axes[2].set_xlabel('eixo x') # somente setando no primeiro axes
+axes[2].set_ylim( (0, 8) )
+
+fig.suptitle('Qual tipo é mais forte dos três!', fontsize=16)
+
+plt.tight_layout() # Ajusta o padding dos subplots
+
+plt.show()
+
+### Tipos de Gráfico
+
+#### Linha `plt.plot()`
+[Documentação](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot)
+
+x = np.linspace(0, 2, 100)
+plt.plot(x, x**2)
+plt.show()
+
+#### Area `plt.stackplot()`
+[Documentação](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.stackplot.html#matplotlib.pyplot.stackplot)
+
+##Area das evoluções do Bulbasauro
+
+import matplotlib.pyplot as plt
+from jupyterthemes import jtplot
+jtplot.style()
+plt.rcParams['axes.grid'] = False
+
+poquimão = plt.imread("Bulbassauro.jfif")
+print(poquimão.shape)
+plt.imshow(poquimão, cmap='gray')
+plt.title('Evolução do Bulbasauro')
+plt.show()
+
+x = np.linspace(0.71, 0.99, 200) #Altura dos Pokemons
+
+labels = [r'$Bulbasaur$', r'$Ivysaur$', r'$Venusaur$']
+plt.stackplot(x, x, x**2, x**3, labels=labels)
+plt.legend(loc='upper left')
+
+plt.show()
+
+##Caracteristicas Importantes
+
+import matplotlib.pyplot as plt
+from jupyterthemes import jtplot
+jtplot.style()
+plt.rcParams['axes.grid'] = False
+
+poquimão = plt.imread("nblast_04-04_pokemonblast.jpg")
+print(poquimão.shape)
+plt.imshow(poquimão, cmap='gray')
+plt.title('Batalhas Pokemon')
+plt.show()
+
+feature_importance = np.abs(model.coef_)
+feature_names = poly.get_feature_names_out(X.columns)
+feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': feature_importance}).sort_values(by='Importance', ascending=False)
+(feature_importance_df)
+
+
+
+plt.figure(figsize=(10, 8))
+plt.barh(feature_importance_df['Feature'], feature_importance_df['Importance'])
+plt.xlabel('Importância')
+plt.ylabel('Características')
+plt.title('Importância das Características')
+plt.gca().invert_yaxis()
+plt.show()
+
+##Atributos Totais
+
+fig, axs = plt.subplots(3, 2, figsize=(15, 15))
+axs = axs.flatten()
+
+for i, column in enumerate(X.columns):
+    axs[i].scatter(df[column], y)
+    axs[i].set_xlabel(column)
+    axs[i].set_ylabel('Total')
+    axs[i].set_title(f'{column} vs Atributos Totais')
+
+plt.tight_layout()
+plt.show()
